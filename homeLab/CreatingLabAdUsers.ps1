@@ -4,16 +4,11 @@
 
 
 #region functions
-function New-GeneratedPerson ()
+function New-GeneratedPerson
 {
     param (
-        [parameter()]
-        [int]
-        $count = 1,
-        [parameter()]
-        [ValidateSet("Male","Female")]
-        [string]
-        $gender
+        [parameter()][int]$count = 1,
+        [parameter()][ValidateSet("Male","Female")][string]$gender
     )
 
     ####
@@ -39,91 +34,109 @@ function New-GeneratedPerson ()
 }
 function Convert-ToLat 
 {
-    param([string]$inString)
-   $Translit_To_LAT = @{ 
-   [char]'–∞' = "a"
-   [char]'–ê' = "A"
-   [char]'–±' = "b"
-   [char]'–ë' = "B"
-   [char]'–≤' = "v"
-   [char]'–í' = "V"
-   [char]'–≥' = "g"
-   [char]'–ì' = "G"
-   [char]'–¥' = "d"
-   [char]'–î' = "D"
-   [char]'–µ' = "e"
-   [char]'–ï' = "E"
-   [char]'—ë' = "e"
-   [char]'–Å' = "E"
-   [char]'–∂' = "zh"
-   [char]'–ñ' = "Zh"
-   [char]'–∑' = "z"
-   [char]'–ó' = "Z"
-   [char]'–∏' = "i"
-   [char]'–ò' = "I"
-   [char]'–π' = "y"
-   [char]'–ô' = "Y"
-   [char]'–∫' = "k"
-   [char]'–ö' = "K"
-   [char]'–ª' = "l"
-   [char]'–õ' = "L"
-   [char]'–º' = "m"
-   [char]'–ú' = "M"
-   [char]'–Ω' = "n"
-   [char]'–ù' = "N"
-   [char]'–æ' = "o"
-   [char]'–û' = "O"
-   [char]'–ø' = "p"
-   [char]'–ü' = "P"
-   [char]'—Ä' = "r"
-   [char]'–†' = "R"
-   [char]'—Å' = "s"
-   [char]'–°' = "S"
-   [char]'—Ç' = "t"
-   [char]'–¢' = "T"
-   [char]'—É' = "u"
-   [char]'–£' = "U"
-   [char]'—Ñ' = "f"
-   [char]'–§' = "F"
-   [char]'—Ö' = "h"
-   [char]'–•' = "H"
-   [char]'—Ü' = "ts"
-   [char]'–¶' = "Ts"
-   [char]'—á' = "ch"
-   [char]'–ß' = "Ch"
-   [char]'—à' = "sh"
-   [char]'–®' = "Sh"
-   [char]'—â' = "sch"
-   [char]'–©' = "Sch"
-   [char]'—ä' = ""		# "``"
-   [char]'–™' = ""		# "``"
-   [char]'—ã' = "y"		# "y`"
-   [char]'–´' = "Y"		# "Y`"
-   [char]'—å' = ""		# "`"
-   [char]'–¨' = ""		# "`"
-   [char]'—ç' = "e"		# "e`"
-   [char]'–≠' = "E"		# "E`"
-   [char]'—é' = "yu"
-   [char]'–Æ' = "Yu"
-   [char]'—è' = "ya"
-   [char]'–Ø' = "Ya"
-   }
-   $outChars=""
-   foreach ($c in $inChars = $inString.ToCharArray())
-       {
-       if ($Translit_To_LAT[$c] -cne $Null ) 
-           {$outChars += $Translit_To_LAT[$c]}
-       else
-           {$outChars += $c}
-       }
-   Write-Output $outChars
+    Param
+    (
+        [parameter(Mandatory = $true)][string]$inString
+    )
+
+    $translitTable = @{ 
+    [char]'‡' = "a"
+    [char]'¿' = "A"
+    [char]'·' = "b"
+    [char]'¡' = "B"
+    [char]'‚' = "v"
+    [char]'¬' = "V"
+    [char]'„' = "g"
+    [char]'√' = "G"
+    [char]'‰' = "d"
+    [char]'ƒ' = "D"
+    [char]'Â' = "e"
+    [char]'≈' = "E"
+    [char]'∏' = "e"
+    [char]'®' = "E"
+    [char]'Ê' = "zh"
+    [char]'∆' = "Zh"
+    [char]'Á' = "z"
+    [char]'«' = "Z"
+    [char]'Ë' = "i"
+    [char]'»' = "I"
+    [char]'È' = "y"
+    [char]'…' = "Y"
+    [char]'Í' = "k"
+    [char]' ' = "K"
+    [char]'Î' = "l"
+    [char]'À' = "L"
+    [char]'Ï' = "m"
+    [char]'Ã' = "M"
+    [char]'Ì' = "n"
+    [char]'Õ' = "N"
+    [char]'Ó' = "o"
+    [char]'Œ' = "O"
+    [char]'Ô' = "p"
+    [char]'œ' = "P"
+    [char]'' = "r"
+    [char]'–' = "R"
+    [char]'Ò' = "s"
+    [char]'—' = "S"
+    [char]'Ú' = "t"
+    [char]'“' = "T"
+    [char]'Û' = "u"
+    [char]'”' = "U"
+    [char]'Ù' = "f"
+    [char]'‘' = "F"
+    [char]'ı' = "kh"
+    [char]'’' = "KH"
+    [char]'ˆ' = "ts"
+    [char]'÷' = "Ts"
+    [char]'˜' = "ch"
+    [char]'◊' = "Ch"
+    [char]'¯' = "sh"
+    [char]'ÿ' = "Sh"
+    [char]'˘' = "sch"
+    [char]'Ÿ' = "Sch"
+    [char]'˙' = ""		# "``"
+    [char]'⁄' = ""		# "``"
+    [char]'˚' = "y"		# "y`"
+    [char]'€' = "Y"		# "Y`"
+    [char]'¸' = ""		# "`"
+    [char]'‹' = ""		# "`"
+    [char]'˝' = "e"		# "e`"
+    [char]'›' = "E"		# "E`"
+    [char]'˛' = "yu"
+    [char]'ﬁ' = "Yu"
+    [char]'ˇ' = "ya"
+    [char]'ﬂ' = "Ya"
+    }
+
+    $outChars = ""
+
+    foreach ($char in $inChars = $inString.ToCharArray())
+        {
+            if ($translitTable[$c] -cne $Null ) 
+            {
+                $outChars += $translitTable[$c]
+            }
+            else
+            {
+                $outChars += $c
+            }
+        }
+
+    return $outChars
 }
-function Set-Login ($FullName) 
+function Set-Login
 {
-   $enInName 		= ((translit-tolat(($FullName -split " ")[1])).ToLower())[0]
-   $enInMidName 	= ((translit-tolat(($FullName -split " ")[2])).ToLower())[0]
-   $enSN 			= (translit-tolat(($FullName -split " ")[0])).toLower()
-   $global:login	= $enSN + "." + $enInName + $enInMidName
+    Param 
+    (
+        [parameter(Mandatory = $true)][string]$fullName
+    )
+
+    $enInName 		= ((Convert-ToLat(($fullName -split " ")[1])).ToLower())[0]
+    $enInMidName 	= ((Convert-ToLat(($fullName -split " ")[2])).ToLower())[0]
+    $enSN 			= (Convert-ToLat(($fullName -split " ")[0])).toLower()
+    $login = $enSN + "." + $enInName + $enInMidName
+
+    return $login
 }
 function New-SWRandomPassword 
 {
