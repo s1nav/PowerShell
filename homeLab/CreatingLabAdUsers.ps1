@@ -278,6 +278,19 @@ function New-SWRandomPassword
 }
 function New-LabAdUser
 {
+    Param
+    (
+        [parameter(Madatory = $true,ValueFromPipeline=$true)][string]$fullName,
+        [parameter()][string]$organizationalUnit,
+        [parameter()][string]$title,
+        [parameter()][string]$company
+    )
+
+    $displayName = $fullName
+    $sn = ($fullName -split " ")[0]
+    $givenName = ($fullName -split " ")[1]
+    $middleName = ($fullName -split " ")[2]
+    $sAMAccountName = Set-Login $fullName
 
 }
 
