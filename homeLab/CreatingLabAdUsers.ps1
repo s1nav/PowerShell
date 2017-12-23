@@ -280,7 +280,7 @@ function New-LabAdUser
 {
     Param
     (
-        [parameter(Madatory = $true,ValueFromPipeline=$true)][string]$fullName,
+        [parameter(ValueFromPipeline=$true)][string]$fullName,
         [parameter()][string]$organizationalUnit,
         [parameter()][string]$title,
         [parameter()][string]$company,
