@@ -283,14 +283,54 @@ function New-LabAdUser
         [parameter(Madatory = $true,ValueFromPipeline=$true)][string]$fullName,
         [parameter()][string]$organizationalUnit,
         [parameter()][string]$title,
-        [parameter()][string]$company
+        [parameter()][string]$company,
+        [parameter()][string]$department
     )
 
+    $enabled = $true
     $displayName = $fullName
     $sn = ($fullName -split " ")[0]
     $givenName = ($fullName -split " ")[1]
     $middleName = ($fullName -split " ")[2]
     $sAMAccountName = Set-Login $fullName
+    $plainTextPwd = New-SWRandomPassword
+    $password = $plainTextPwd | ConvertTo-SecureString -AsPlainText -Force
+    $description = $plainTextPwd
+
+    If ($organizationalUnit) {$path = $organizationalUnit} else {$path = (Get-ADDomain).UsersContainer}
+
+    try
+    {
+        $existUser = Get-ADUser -LDAPFilter "(sAMAccountName=$sAMAccountName)" -ErrorAction Stop -ErrorVariable eaExistUsers
+    }
+    catch
+    {
+    
+    }
+
+    If (!$existUser)
+    {
+        New-ADUser -SamAccountName $sAMAccountName `
+                    -AccountPassword $password `
+                    -Enabled $enabled `
+                    -ChangePasswordAtLogon $false `
+                    -Path $path `
+                    -Name $fullName `
+                    -DisplayName $fullName `
+                    -GivenName $givenName `
+                    -Surname $sn `
+                    -Description $plainTextPwd `
+                    -OtherAttributes @{
+                        middleName = $middleName
+                        company = $company
+                    }
+        
+        Start-Sleep 5
+
+        If ($title) {Set-ADUser -SamAccountName $sAMAccountName -Title $title}
+        If ($department) {Set-ADUser -SamAccountName $sAMAccountName -Department $department}
+
+    }
 
 }
 
